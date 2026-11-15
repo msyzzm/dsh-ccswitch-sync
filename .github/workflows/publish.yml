@@ -49,14 +49,22 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # npmmirror otherwise lags behind npmjs, and can serve the staged-publish
-      # placeholder (0.0.0-stage) as `latest` until it catches up. npmjs takes a
-      # few minutes to expose a fresh publish, and a sync requested before that
-      # finds nothing new — so wait for `latest` to move first. Best effort: a
-      # timeout or a failed request never fails the release.
+      # placeholder (0.0.0-stage) as `latest` until it catches up. Two lags stack
+      # up: npmjs takes a few minutes to expose a fresh publish, and npmmirror
+      # syncs from a replica (r.cnpmjs.org) that trails npmjs further — a sync
+      # that runs too early reports success and adds nothing. So wait for npmjs,
+      # then keep re-requesting the sync until the mirror itself serves the new
+      # `latest`. Best effort: a timeout or a failed request never fails the
+      # release.
       - name: Ask npmmirror to sync
+        timeout-minutes: 20
         run: |
           name=$(node -p 'require("./package.json").name')
           version=$(node -p 'require("./package.json").version')
+          mirror_latest() {
+            curl -fsS "https://registry.npmmirror.com/$name?t=$(date +%s%N)" 2>/dev/null               | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{console.log(JSON.parse(s)["dist-tags"].latest)}catch{}})' || true
+          }
+
           for attempt in $(seq 1 30); do
             latest=$(npm view "$name" dist-tags.latest --prefer-online 2>/dev/null || true)
             if [ "$latest" = "$version" ]; then break; fi
@@ -67,4 +75,18 @@ jobs:
             echo "::warning::npmjs did not expose $version within 5 minutes; skipping the npmmirror sync"
             exit 0
           fi
-          curl -fsS -X PUT "https://registry-direct.npmmirror.com/-/package/$name/syncs" || echo "::warning::npmmirror sync request failed"
+
+          # Each round requests a sync, then gives the mirror a minute to serve it.
+          for round in $(seq 1 10); do
+            curl -fsS -X PUT "https://registry-direct.npmmirror.com/-/package/$name/syncs" >/dev/null               || echo "npmmirror sync request failed (round $round/10)"
+            for check in $(seq 1 6); do
+              sleep 10
+              mirrored=$(mirror_latest)
+              if [ "$mirrored" = "$version" ]; then
+                echo "npmmirror serves $version (round $round/10)"
+                exit 0
+              fi
+            done
+            echo "npmmirror latest is '$mirrored' after round $round/10; requesting another sync"
+          done
+          echo "::warning::npmmirror still serves '$mirrored' after 10 minutes; trigger https://npmmirror.com/package/$name manually"
