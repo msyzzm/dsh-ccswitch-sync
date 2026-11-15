@@ -97,3 +97,17 @@ test('composePatch keeps rows that follow the managed block', () => {
   assert.ok(!out.includes('stale'))
   assert.ok(out.indexOf('id: after') > out.indexOf(END_MARK))
 })
+
+test('extractManaged keeps providers when the source starts with a BOM', () => {
+  const blocks = extractManaged(`\uFEFF${SOURCE}`)
+  assert.ok(isLlmPiAiBlock(blocks[0]))
+  assert.ok(blocks[0].includes('freellm'))
+})
+
+test('composePatch drops a stray llm-pi-ai row in a target that starts with a BOM', () => {
+  const target = '\uFEFF- id: llm-pi-ai\n  config:\n    providers: {}\n- id: keep-me\n'
+  const out = composePatch(target, extractManaged(SOURCE))
+  assert.equal(out.split('id: llm-pi-ai').length - 1, 1)
+  assert.ok(out.includes('id: keep-me'))
+  assert.equal(composePatch(out, extractManaged(SOURCE)), out)
+})

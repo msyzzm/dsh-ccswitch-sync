@@ -34,7 +34,7 @@ jobs:
           node --check lib/index.js
           node --check lib/sync.mjs
           node scripts/check-manifest.mjs
-          node --test test/sync.test.mjs
+          node --test "test/*.test.mjs"
 
       - name: Manifest ships in the tarball
         run: |
@@ -47,3 +47,8 @@ jobs:
           # Empty when the package uses trusted publishing (OIDC); npm then
           # authenticates through the workflow identity instead of a token.
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # npmmirror otherwise lags behind npmjs, and can serve the staged-publish
+      # placeholder (0.0.0-stage) as `latest` until it catches up. Best effort.
+      - name: Ask npmmirror to sync
+        run: curl -fsS -X PUT "https://registry-direct.npmmirror.com/-/package/$(node -p 'require("./package.json").name')/syncs" || true

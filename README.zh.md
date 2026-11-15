@@ -125,7 +125,7 @@ dsh plugin --profile dsh-tui remove dsh-ccswitch-sync
 ## 开发
 
 ```sh
-node --test test/sync.test.mjs     # 拼接逻辑：幂等、标记、残留行
+npm test                           # 拼接逻辑（幂等、标记、BOM）+ 文件级同步
 node scripts/check-manifest.mjs    # 无依赖的清单形状检查
 ```
 

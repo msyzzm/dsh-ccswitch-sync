@@ -131,7 +131,7 @@ on the next run.
 ## Development
 
 ```sh
-node --test test/sync.test.mjs     # splicing: idempotency, markers, stray rows
+npm test                           # splicing (idempotency, markers, BOM) + file-level sync
 node scripts/check-manifest.mjs    # dependency-free manifest shape check
 ```
 
