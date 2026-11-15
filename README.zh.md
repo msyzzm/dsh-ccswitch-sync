@@ -1,6 +1,6 @@
 # dsh-ccswitch-sync
 
-[English](README.md) · [dsh-TUI](https://github.com/ccch1mneyyy/dsh-TUI) · [插件目录](https://dshtui.com/plugins)
+[English](README.md) · [npm](https://www.npmjs.com/package/dsh-ccswitch-sync) · [dsh-TUI](https://github.com/ccch1mneyyy/dsh-TUI) · [插件目录](https://dshtui.com/plugins)
 
 把 **CC Switch** 写在自己 profile 里的 DSH 配置，镜像进 `dsh-tui` profile 的
 [dsh-TUI](https://dshtui.com) 插件；底栏顺带显示这份镜像有多新。
@@ -18,7 +18,7 @@ ccs 3p 4mcp 1m        ← 3 个 provider、4 个 MCP、1 分钟前写入
 ## 安装
 
 ```sh
-# 从 npm 装（发布后）
+# 从 npm 装
 dsh plugin --profile dsh-tui add dsh-ccswitch-sync
 
 # 或从本地检出装

@@ -1,6 +1,6 @@
 # dsh-ccswitch-sync
 
-[中文](README.zh.md) · [dsh-TUI](https://github.com/ccch1mneyyy/dsh-TUI) · [Plugin directory](https://dshtui.com/plugins)
+[中文](README.zh.md) · [npm](https://www.npmjs.com/package/dsh-ccswitch-sync) · [dsh-TUI](https://github.com/ccch1mneyyy/dsh-TUI) · [Plugin directory](https://dshtui.com/plugins)
 
 A [dsh-TUI](https://dshtui.com) plugin that mirrors the DSH configuration **CC Switch** keeps
 in its own profile into the `dsh-tui` profile, and shows how fresh the mirror is in the footer.
@@ -18,10 +18,10 @@ ccs 3p 4mcp 1m        ← 3 providers, 4 MCP servers, patch written 1 minute ago
 ## Install
 
 ```sh
-# from npm (once published)
+# from npm
 dsh plugin --profile dsh-tui add dsh-ccswitch-sync
 
-# or from a checkout
+# or from a local checkout
 dsh plugin --profile dsh-tui add link:/path/to/dsh-ccswitch-sync
 ```
 
