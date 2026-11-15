@@ -2,6 +2,11 @@
 
 [中文](README.zh.md) · [npm](https://www.npmjs.com/package/dsh-ccswitch-sync) · [dsh-TUI](https://github.com/ccch1mneyyy/dsh-TUI) · [Plugin directory](https://dshtui.com/plugins)
 
+<p>
+  <img src="docs/footer.png" alt="Footer field: ccs 3p 3mcp 33m" width="358"><br>
+  <img src="docs/ccswitch.png" alt="/ccswitch output: providers, MCP servers, patch age" width="443">
+</p>
+
 A [dsh-TUI](https://dshtui.com) plugin that mirrors the DSH configuration **CC Switch** keeps
 in its own profile into the `dsh-tui` profile, and shows how fresh the mirror is in the footer.
 
@@ -88,7 +93,9 @@ The managed rows go into one marked block at the end of the target patch:
 
 - `~/.dsh/.credentials.yaml` and every credential. Provider entries reference
   `CC_SWITCH_DSH_*` environment names; the secrets stay where CC Switch put them.
-- `~/.dsh/skills` and any shared skill tree.
+- `~/.dsh/skills` and any shared skill tree — and skills need no mirror. CC Switch links them
+  into `~/.dsh/skills`, which every profile reads (dsh-tui included, through `dsh-base`'s
+  `skill-filesystem`). Enable a skill for DSH in CC Switch and dsh-TUI picks it up.
 - Rows outside the managed block, and every other profile.
 - CC Switch's own files: it only reads them.
 

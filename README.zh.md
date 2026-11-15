@@ -2,6 +2,11 @@
 
 [English](README.md) · [npm](https://www.npmjs.com/package/dsh-ccswitch-sync) · [dsh-TUI](https://github.com/ccch1mneyyy/dsh-TUI) · [插件目录](https://dshtui.com/plugins)
 
+<p>
+  <img src="docs/footer.png" alt="底栏字段：ccs 3p 3mcp 33m" width="358"><br>
+  <img src="docs/ccswitch.png" alt="/ccswitch 输出：provider 数、MCP 数、patch 时间" width="443">
+</p>
+
 把 **CC Switch** 写在自己 profile 里的 DSH 配置，镜像进 `dsh-tui` profile 的
 [dsh-TUI](https://dshtui.com) 插件；底栏顺带显示这份镜像有多新。
 
@@ -84,7 +89,9 @@ dsh plugin --profile dsh-tui remove dsh-ccswitch-sync
 
 - `~/.dsh/.credentials.yaml` 与任何凭证。provider 条目引用的是 `CC_SWITCH_DSH_*`
   环境变量名，密钥留在 CC Switch 放的位置。
-- `~/.dsh/skills` 与任何共享技能树。
+- `~/.dsh/skills` 与任何共享技能树——技能也不需要镜像。CC Switch 把技能链接进
+  `~/.dsh/skills`，所有 profile 都读这个目录（dsh-tui 通过 `dsh-base` 的 `skill-filesystem`
+  读取）。在 CC Switch 里给 DSH 启用某个技能，dsh-TUI 就能用。
 - 托管区块以外的行，以及其他所有 profile。
 - CC Switch 自己的文件：只读，不写。
 
