@@ -1,6 +1,6 @@
 {
   "name": "dsh-ccswitch-sync",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Mirror CC Switch's DSH providers and MCP servers into the dsh-tui profile, and show how fresh the mirror is.",
   "keywords": [
     "dsh",

@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/@dsh-std/manifest@0.1.1-rc.2/schema/dsh-plugin-0.15.schema.json",
   "id": "msyzzm.dsh-ccswitch-sync",
   "name": "CC Switch → dsh-TUI sync",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "manifestVersion": "0.15",
   "facets": {
     "host": {
