@@ -1,0 +1,3 @@
+# The plugin ships to npm and gets spliced into YAML patches; keep one line
+# ending everywhere so `npm pack` and git agree byte for byte.
+* text=auto eol=lf

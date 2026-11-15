@@ -1,0 +1,52 @@
+{
+  "$schema": "https://unpkg.com/@dsh-std/manifest@0.1.1-rc.2/schema/dsh-plugin-0.15.schema.json",
+  "id": "msyzzm.dsh-ccswitch-sync",
+  "name": "CC Switch → dsh-TUI sync",
+  "version": "0.1.0",
+  "manifestVersion": "0.15",
+  "facets": {
+    "host": {
+      "entry": "lib/index.js",
+      "apiVersion": "v1alpha1"
+    }
+  },
+  "requires": {
+    "contracts": []
+  },
+  "permissions": [
+    {
+      "name": "dsh-ccswitch-sync.profile.read",
+      "scope": "~/.dsh/profiles/web/cordis.patch.yml, ~/.dsh/profiles/desktop/cordis.patch.yml",
+      "reason": "Reads the CC Switch-managed parts (llm-pi-ai providers, cc-switch-mcp-* rows) out of the source profile patches. Read-only; nothing else in those files is inspected."
+    },
+    {
+      "name": "dsh-ccswitch-sync.profile.write",
+      "scope": "~/.dsh/profiles/dsh-tui/cordis.patch.yml",
+      "reason": "Writes the mirrored rows into one marked block of the dsh-tui profile patch. The write is atomic, only happens when the composed text actually differs, and never touches text outside the block markers."
+    },
+    {
+      "name": "dsh-ccswitch-sync.state.write",
+      "scope": "~/.dsh-tui/ccswitch-sync/",
+      "reason": "Keeps the last 20 copies of the target patch before each rewrite, plus a diagnostic log. Best effort: a failure here never blocks or rewrites a sync."
+    }
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "id": "msyzzm.ccswitch",
+        "title": "ccswitch",
+        "description": "Show the mirror status (providers, MCP servers, patch age); `/ccswitch sync` mirrors now."
+      }
+    ]
+  },
+  "subscriptions": [],
+  "license": "MIT",
+  "source": {
+    "repository": "https://github.com/msyzzm/dsh-ccswitch-sync"
+  },
+  "compat": {
+    "hosts": [
+      "dsh-tui >=0.20.0"
+    ]
+  }
+}

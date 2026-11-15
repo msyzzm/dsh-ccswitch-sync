@@ -1,0 +1,51 @@
+{
+  "name": "dsh-ccswitch-sync",
+  "version": "0.1.0",
+  "description": "Mirror CC Switch's DSH providers and MCP servers into the dsh-tui profile, and show how fresh the mirror is.",
+  "keywords": [
+    "dsh",
+    "dsh-tui",
+    "dsh-plugin",
+    "cc-switch",
+    "ccswitch",
+    "cordis"
+  ],
+  "homepage": "https://github.com/msyzzm/dsh-ccswitch-sync#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/msyzzm/dsh-ccswitch-sync.git"
+  },
+  "bugs": {
+    "url": "https://github.com/msyzzm/dsh-ccswitch-sync/issues"
+  },
+  "author": "msyzzm",
+  "license": "MIT",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "dsh-plugin.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": "^22.19 || >=24"
+  },
+  "scripts": {
+    "check": "node --check lib/index.js && node --check lib/sync.mjs",
+    "check:manifest": "node scripts/check-manifest.mjs",
+    "test": "node --test test/sync.test.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

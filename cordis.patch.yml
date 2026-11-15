@@ -1,0 +1,5 @@
+# Row contributed by this bundle. The loader resolves the name through the
+# profile's node_modules; `dsh plugin add <path>` links it there first.
+- insert:
+    - id: ccswitch-sync
+      name: 'dsh-ccswitch-sync'

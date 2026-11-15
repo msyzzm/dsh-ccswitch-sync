@@ -1,0 +1,49 @@
+name: publish
+
+# Tag-driven release: pushing `v<version>` publishes the package with provenance.
+# Configure the package on npmjs.com as a trusted publisher for this repository
+# and this workflow file to publish without any secret; a static NPM_TOKEN is
+# the fallback (leave the secret unset to use OIDC).
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  # npm provenance and trusted publishing both authenticate through OIDC.
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Tag matches package.json version
+        run: |
+          node -e 'const { version } = require("./package.json"); const tag = process.env.GITHUB_REF_NAME; if (tag !== `v${version}`) { console.error(`tag ${tag} does not match v${version}`); process.exit(1) }'
+
+      - name: Checks
+        run: |
+          node --check lib/index.js
+          node --check lib/sync.mjs
+          node scripts/check-manifest.mjs
+          node --test test/sync.test.mjs
+
+      - name: Manifest ships in the tarball
+        run: |
+          npm pack --dry-run --json > "$RUNNER_TEMP/pack.json"
+          node -e 'const pack = require(process.argv[1])[0]; for (const want of ["dsh-plugin.json", "cordis.patch.yml"]) { if (!pack.files.some(file => file.path === want)) { console.error(`${want} is not in the tarball`); process.exit(1) } }' "$RUNNER_TEMP/pack.json"
+
+      - name: Publish with provenance
+        run: npm publish --provenance --access public
+        env:
+          # Empty when the package uses trusted publishing (OIDC); npm then
+          # authenticates through the workflow identity instead of a token.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
